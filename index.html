@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://site-assets.fontawesome.com/releases/v6.0.0/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>DSA Project</title>
+</head>
+
+<body>
+    <div class='container-fluid'>
+
+        <h2 class='sec-title'>Data Structure & Algorithms restaurant Project</h2>
+        <div class='row'>
+            <div class='col-lg-7 col-12'>
+                <div class="card-item">
+                    <h4><span>Order in Process</span><button data-target="process" class="clear-data"><i class="fa-solid fa-trash"></i></button></h4>
+                    <div class='table-scroll'>
+                        <table class="table-management">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Items</th>
+                                    <th>table no</th>
+                                    <th>amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="order-in-process-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-item">
+                    <h4><span>Completed Order</span><button data-target="completed" class="clear-data"><i class="fa-solid fa-trash"></i></button></h4>
+                    <div class='table-scroll'>
+                        <table class="table-management">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Items</th>
+                                    <th>table no</th>
+                                    <th>amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="order-completed-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class='col-lg-5 col-12'>
+                <div class="card-item">
+                    <h4>Order Below</h4>
+                    <form id="order-form">
+                        <div class='row'>
+                            <div class='col-md-6 col-12'>
+                                <div class="input-field">
+                                    <label>Name *</label>
+                                    <input name="name" class="custom-input" required type="text" />
+                                </div>
+                            </div>
+                            <div class='col-md-6 col-12'>
+                                <div class="input-field">
+                                    <label>Amount *</label>
+                                    <input name="amount" class="custom-input" required type="number" />
+                                </div>
+                            </div>
+                            <div class='col-md-6 col-12'>
+                                <div class="input-field">
+                                    <label>Duration *</label>
+                                    <input name="duration" class="custom-input read-only" readonly required
+                                        type="text" />
+                                </div>
+                            </div>
+                            <div class='col-md-6 col-12'>
+                                <div class="input-field">
+                                    <label>Table No *</label>
+                                    <select name="tableNo" class="custom-input" required>
+                                        <option selected disabled>Select Table</option>
+                                        <option value="Table # 01">Table # 01</option>
+                                        <option value="Table # 02">Table # 02</option>
+                                        <option value="Table # 03">Table # 03</option>
+                                        <option value="Table # 04">Table # 04</option>
+                                        <option value="Table # 05">Table # 05</option>
+                                        <option value="Table # 06">Table # 06</option>
+                                        <option value="Table # 07">Table # 07</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class="input-field">
+                                    <label>Email *</label>
+                                    <input name="email" class="custom-input" required type="email" />
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class="input-field">
+                                    <label>Item *</label>
+                                    <select name="orderItem" class="custom-input" required type="text">
+                                        <option selected disabled="">Select Item</option>
+                                        <optgroup label="Quick Eat">
+                                            <option value="01-Cheese Nan">Cheese Nan</option>
+                                            <option value="02-Prawn Tempura">Prawn Tempura</option>
+                                            <option value="03-BBQ Wings">BBQ Wings</option>
+                                            <option value="04-Honey Garlic Wings">Honey Garlic Wings</option>
+                                        </optgroup>
+                                        <optgroup label="Healthy Green">
+                                            <option value="05-Caesar Salad">Caesar Salad</option>
+                                            <option value="06-Chicken Carsar">Chicken Carsar</option>
+                                            <option value="07-Potato Salad">Potato Salad</option>
+                                            <option value="08-Raita">Raita</option>
+                                            <option value="09-Fresh Green Salad">Fresh Green Salad</option>
+                                        </optgroup>
+                                        <optgroup label="The Pasta Attack">
+                                            <option value="10-Alferado Pasta">Alferado Pasta</option>
+                                            <option value="11-Chicken Parmesan">Chicken Parmesan</option>
+                                            <option value="12-Jalapeno Chicken Paste">Jalapeno Chicken Paste</option>
+                                        </optgroup>
+                                        <optgroup label="Soup On">
+                                            <option value="13-Hot &amp; Sour Red Soup">Hot &amp; Sour Red Soup</option>
+                                            <option value="14-Hot &amp; Sour White Soup">Hot &amp; Sour White Soup
+                                            </option>
+                                            <option value="15-Cream of Chicken Soup">Cream of Chicken Soup</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class='col-12'>
+                                <div class="input-field">
+                                    <label>Message (optional)</label>
+                                    <textarea name="message" class="custom-input"></textarea>
+                                </div>
+                            </div>
+                            <div class='input-field'>
+                                <button type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11"></div>
+</body>
+
+</html>
+<script src="js/jquery-3.6.3.min.js"></script>
+<script src="js/menuitems.js"></script>
+<script src="js/custom.js"></script>
