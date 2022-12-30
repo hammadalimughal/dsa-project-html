@@ -1,9 +1,11 @@
+
 let orderinprocess;
 let ordercompleted;
 // render data in tables
 $(document).ready(function () {
     updateOrderProcessTable()
     updateOrderCompleteTable()
+    setActiveItem()
 })
 // get orderinprocess data from local storage
 if (localStorage.getItem("orderinprocess")) {
@@ -29,41 +31,23 @@ function updateOrderProcessTable() {
     }
 
     let tempData = "";
+    $("#order-in-process-body").html("")
     orderinprocess.map((orderinprocessItem, ind) => {
-        tempData += `<tr>
-        <td><h6>${ind + 1}</h6></td>
-        <td><h6>${orderinprocessItem.name}</h6></td>
-        <td><h6>${orderinprocessItem.orderItem.split("-")[1]}</h6></td>
-        <td><h6>${orderinprocessItem.tableNo}</h6></td>
-        <td><h6>${orderinprocessItem.amount}</h6></td>
-        <td class="progress-cell">
-            <div class="progress progress-default">
-                <div class="progress-bar" data-duration="${orderinprocessItem.duration}" role="progressbar" style="width: 0%" aria-valuemax="100"></div>
-            </div>
-        </td>
-    </tr>`
+        tempData += `<tr data-id="${orderinprocessItem.id}">
+            <td><h6>${ind + 1}</h6></td>
+            <td><h6>${orderinprocessItem.name}</h6></td>
+            <td><h6>${orderinprocessItem.orderItem.split("-")[1]}</h6></td>
+            <td><h6>${orderinprocessItem.tableNo}</h6></td>
+            <td><h6>${orderinprocessItem.amount}</h6></td>
+            <td class="progress-cell">
+                <div class="progress progress-default">
+                    <div class="progress-bar" data-duration="${orderinprocessItem.duration}" role="progressbar" style="width: 0%" aria-valuemax="100"></div>
+                </div>
+            </td>
+        </tr>`
         $("#order-in-process-body").html(tempData)
-        $(".progress-bar").each((ind, elem) => {
-            let progressval = 0;
-            console.log($(elem).data("duration"))
-            setInterval(() => {
-                if (progressval < 100) {
-                    progressval += 1;
-                    $(elem).css("width", `${progressval}%`)
-                }
-            }, $(elem).data("duration") * 10);
-            setTimeout(() => {
-                deQueue(orderinprocess, orderinprocessItem)
-                enQueue(ordercompleted, orderinprocessItem)
-                console.log(ordercompleted)
-                console.log(orderinprocess)
-                localStorage.setItem("orderinprocess", JSON.stringify(orderinprocess))
-                localStorage.setItem("ordercompleted", JSON.stringify(ordercompleted))
-                updateOrderProcessTable()
-                updateOrderCompleteTable()
-            }, $(elem).data("duration") * 1000);
-        })
     })
+    setActiveItem()
 }
 // update data in order completed table
 function updateOrderCompleteTable() {
@@ -75,7 +59,7 @@ function updateOrderCompleteTable() {
     }
     let tempData = "";
     ordercompleted.map((ordercompletedItem, ind) => {
-        tempData += `<tr>
+        tempData += `<tr data-id="${ordercompleted.id}">
         <td><h6>${ind + 1}</h6></td>
         <td><h6>${ordercompletedItem.name}</h6></td>
         <td><h6>${ordercompletedItem.orderItem.split("-")[1]}</h6></td>
@@ -99,6 +83,7 @@ function deQueue(queue, item) {
 $("#order-form").on('submit', function (e) {
     e.preventDefault()
     let tempData = {
+        id: Date.now(),
         name: $("input[name='name']").val(),
         amount: $("input[name='amount']").val(),
         duration: $("input[name='duration']").val(),
@@ -108,36 +93,41 @@ $("#order-form").on('submit', function (e) {
         message: $("select[name='message']").val(),
         completed: 0,
     }
-    let ind = $("#order-in-process-body tr").length
-    $("#order-in-process-body").append(`<tr>
-    <td><h6>${ind}</h6></td>
-        <td><h6>${tempData.name}</h6></td>
-        <td><h6>${tempData.orderItem.split("-")[1]}</h6></td>
-        <td><h6>${tempData.tableNo}</h6></td>
-        <td><h6>${tempData.amount}</h6></td>
-        <td class="progress-cell">
-            <div class="progress progress-default">
-                <div class="progress-bar" data-duration="${tempData.duration}" role="progressbar" style="width: 0%" aria-valuemax="100"></div>
-            </div>
-        </td>
-    </tr>`)
-    $("input").val("")
-    enQueue(orderinprocess, tempData)
-    localStorage.setItem("orderinprocess", JSON.stringify(orderinprocess))
-    createToast("order has been placed!")
+    if($("#order-in-process-body").text().includes($("select[name='tableNo']").val())){
+        createToast(`${$("select[name='tableNo']").val()} is already occupied`,"danger")
+    }    
+    else{
+        let ind = $("#order-in-process-body tr").length
+        $("#order-in-process-body").append(`<tr  data-id="${tempData.id}">
+        <td><h6>${ind}</h6></td>
+            <td><h6>${tempData.name}</h6></td>
+            <td><h6>${tempData.orderItem.split("-")[1]}</h6></td>
+            <td><h6>${tempData.tableNo}</h6></td>
+            <td><h6>${tempData.amount}</h6></td>
+            <td class="progress-cell">
+                <div class="progress progress-default">
+                    <div class="progress-bar" data-duration="${tempData.duration}" role="progressbar" style="width: 0%" aria-valuemax="100"></div>
+                </div>
+            </td>
+        </tr>`)
+        $("input,textarea").val("")
+        enQueue(orderinprocess, tempData)
+        localStorage.setItem("orderinprocess", JSON.stringify(orderinprocess))
+        setActiveItem()
+        createToast("order has been placed!")
+    }
 })
 // toast function
-function createToast(message) {
+function createToast(message,type="success") {
     let toast = document.createElement("div")
-    $(toast).append(`<div class="toast align-items-center show" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                <p>${message}</p>
-            </div>
-            <button type="button" class="ms-auto" data-bs-dismiss="toast" aria-label="Close"><i
-                class="fa-solid fa-xmark"></i></button>
-        </div>
-    </div>`)
+    $(toast).append(`<div class="toast align-items-center bg-${type} border-0 show" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        <p>${message}</p>
+      </div>
+      <button type="button" class="ms-auto" data-bs-dismiss="toast" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>`)
     $(".toast-container").append(toast)
     setTimeout(() => {
         $(toast).remove()
@@ -145,17 +135,19 @@ function createToast(message) {
 }
 // clear data from localstorage and table
 $(".clear-data").click(function () {
-    if ($(this).data('target') == 'process') {
-        localStorage.removeItem("orderinprocess");
-        setTimeout(() => {
-            updateOrderProcessTable()
-        }, 300);
-    }
-    else if ($(this).data('target') == 'completed') {
-        localStorage.removeItem("ordercompleted");
-        setTimeout(() => {
-            updateOrderCompleteTable()
-        }, 300);
+    if(confirm("Are you Sure? All records will be deleted!")){
+        if ($(this).data('target') == 'process') {
+            localStorage.removeItem("orderinprocess");
+            setTimeout(() => {
+                updateOrderProcessTable()
+            }, 300);
+        }
+        else if ($(this).data('target') == 'completed') {
+            localStorage.removeItem("ordercompleted");
+            setTimeout(() => {
+                updateOrderCompleteTable()
+            }, 300);
+        }
     }
 })
 $("select[name='orderItem']").change(function () {
@@ -163,8 +155,52 @@ $("select[name='orderItem']").change(function () {
     Items.map((cateItem) => {
         cateItem.items.map((prodItem) => {
             if (tempId == prodItem.id) {
+                debugger
                 $("input[name='duration']").val(prodItem.durationInSec)
+                $("input[name='amount']").attr("min",prodItem.price)
+                $("input[name='amount']")[0].oninvalid = function(e) {
+                    e.target.setCustomValidity("");
+                    if (!e.target.validity.valid) {
+                        e.target.setCustomValidity(`Selected Item price is ${prodItem.price}`);
+                    }
+                };
+                $("input[name='amount']")[0].onvalid = function(e){
+                    e.target.setCustomValidity("")
+                }
             }
         })
     })
 })
+
+function setActiveItem() {
+    // $(".progress-bar").each((ind, elem) => {
+    let activeOrder;
+    let progressval = 0;
+    let activeItem = $("#order-in-process-body tr").first();
+    let activeOrderId = $(activeItem).first().data('id')
+    orderinprocess.map((curOrder)=>{
+        if(curOrder.id == activeOrderId){
+            activeOrder = curOrder;
+        }
+    })
+    if (activeItem.length > 0 && !$(activeItem).hasClass("active")) {
+        $(activeItem).addClass("active")
+        let progessInterval =  setInterval(() => {
+            if (progressval < 100) {
+                progressval += 1;
+                $(activeItem).find(".progress-bar").css("width", `${progressval}%`)
+            }
+        }, activeOrder.duration * 10);
+        setTimeout(() => {
+            clearInterval(progessInterval)
+            deQueue(orderinprocess, activeOrder)
+            enQueue(ordercompleted, activeOrder)
+            localStorage.setItem("orderinprocess", JSON.stringify(orderinprocess))
+            localStorage.setItem("ordercompleted", JSON.stringify(ordercompleted))
+            updateOrderProcessTable()
+            updateOrderCompleteTable()
+            setActiveItem()
+        }, activeOrder.duration * 1000);
+        // })
+    }
+}

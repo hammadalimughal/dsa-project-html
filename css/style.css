@@ -128,22 +128,22 @@ select {
     box-shadow: none;
 }
 
-.sec-title {
-    font-size: 22px;
+.sec-title{
+    font-size: 30px;
     text-align: center;
     margin: 30px 0;
     text-transform: uppercase;
 }
-
+.sec-title span{
+    display: block;
+    font-size: 30px;
+    font-weight: 700;
+}
 .card-item {
     background-color: var(--card-bg);
     padding: 25px 20px;
     border-radius: 10px;
     margin-bottom: 20px;
-}
-
-.card-item:nth-last-child(1) {
-    margin: 0;
 }
 
 .card-item h4 {
@@ -307,10 +307,33 @@ select {
 
 
 .table-management td:nth-last-child(1),
-.table-management td:nth-child(1) {
+.table-management td:nth-child(1){
     padding: 0 10px;
 }
-
+.table-management th:nth-child(1),
+.table-management td:nth-child(1){
+    width: 20px;
+}
+.table-management th:nth-child(3),
+.table-management td:nth-child(3){
+    width: 160px;
+}
+.table-management th:nth-child(2),
+.table-management td:nth-child(2){
+    width: 130px;
+}
+.table-management th:nth-child(4),
+.table-management td:nth-child(4){
+    width: 100px;
+}
+.table-management th:nth-child(5),
+.table-management td:nth-child(5){
+    width: 100px;
+}
+.table-management th:nth-child(6),
+.table-management td:nth-child(6){
+    width: 100px;
+}
 .table-management td.flex-01 {
     flex: 1;
 }
@@ -415,10 +438,11 @@ select {
     }
 }
 
-.table-management th:not(:nth-child(1)):not(:nth-last-child(1)),
-.table-management td:not(:nth-child(1)):not(:nth-last-child(1)) {
-    flex: 1;
+.table-management th:not(:nth-child(2)):not(:nth-child(3)),
+.table-management td:not(:nth-child(2)):not(:nth-child(3)){
+    /* flex: 1; */
     padding: 0 8px;
+    text-align: center;
 }
 
 .table-management td .progress-value,
@@ -429,7 +453,16 @@ select {
     color: rgba(255, 255, 255, 0.6);
     margin: 0;
 }
-
+/* .table-management th,
+.table-management td{
+    max-width: 160px;
+} */
+.table-management td h6{
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 .table-management td h6 a {
     color: inherit;
     text-decoration: underline;
