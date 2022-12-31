@@ -40,6 +40,7 @@ function updateOrderProcessTable() {
             <td><h6>${orderinprocessItem.tableNo}</h6></td>
             <td><h6>${orderinprocessItem.amount}</h6></td>
             <td class="progress-cell">
+            <h6>Due</h6>
                 <div class="progress progress-default">
                     <div class="progress-bar" data-duration="${orderinprocessItem.duration}" role="progressbar" style="width: 0%" aria-valuemax="100"></div>
                 </div>
@@ -97,7 +98,7 @@ $("#order-form").on('submit', function (e) {
         createToast(`${$("select[name='tableNo']").val()} is already occupied`,"danger")
     }    
     else{
-        let ind = $("#order-in-process-body tr").length
+        let ind = ($("#order-in-process-body tr").length + 1)
         $("#order-in-process-body").append(`<tr  data-id="${tempData.id}">
         <td><h6>${ind}</h6></td>
             <td><h6>${tempData.name}</h6></td>
@@ -105,6 +106,7 @@ $("#order-form").on('submit', function (e) {
             <td><h6>${tempData.tableNo}</h6></td>
             <td><h6>${tempData.amount}</h6></td>
             <td class="progress-cell">
+            <h6>Due</h6>
                 <div class="progress progress-default">
                     <div class="progress-bar" data-duration="${tempData.duration}" role="progressbar" style="width: 0%" aria-valuemax="100"></div>
                 </div>
@@ -155,7 +157,6 @@ $("select[name='orderItem']").change(function () {
     Items.map((cateItem) => {
         cateItem.items.map((prodItem) => {
             if (tempId == prodItem.id) {
-                debugger
                 $("input[name='duration']").val(prodItem.durationInSec)
                 $("input[name='amount']").attr("min",prodItem.price)
                 $("input[name='amount']")[0].oninvalid = function(e) {
@@ -173,7 +174,6 @@ $("select[name='orderItem']").change(function () {
 })
 
 function setActiveItem() {
-    // $(".progress-bar").each((ind, elem) => {
     let activeOrder;
     let progressval = 0;
     let activeItem = $("#order-in-process-body tr").first();
@@ -185,6 +185,7 @@ function setActiveItem() {
     })
     if (activeItem.length > 0 && !$(activeItem).hasClass("active")) {
         $(activeItem).addClass("active")
+        $(activeItem).find(".progress-cell").children("h6").html("Processing")
         let progessInterval =  setInterval(() => {
             if (progressval < 100) {
                 progressval += 1;
@@ -201,6 +202,5 @@ function setActiveItem() {
             updateOrderCompleteTable()
             setActiveItem()
         }, activeOrder.duration * 1000);
-        // })
     }
 }

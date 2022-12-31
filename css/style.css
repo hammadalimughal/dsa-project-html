@@ -220,7 +220,7 @@ select {
 }
 
 .input-field .custom-input.read-only {
-    cursor: default;
+    cursor: not-allowed;
 }
 
 .input-field .custom-input optgroup {
@@ -343,9 +343,9 @@ select {
 }
 
 .table-management td:nth-last-child(1) {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    display: block;
+    /* align-items: center;
+    justify-content: flex-end; */
 }
 
 .table-management td .edit-btn {
